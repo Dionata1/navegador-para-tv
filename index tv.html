@@ -5,4 +5,154 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>📺 TV Dionata</title>
 <style>
-* {margin
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:linear-gradient(135deg,#000,#1a1a2e 50%,#e50914);color:#fff;height:100vh;overflow:hidden}
+#header{background:rgba(0,0,0,.98);padding:20px;position:fixed;width:100%;z-index:100;display:flex;align-items:center;gap:20px}
+#logo{font-size:28px;font-weight:900;background:linear-gradient(45deg,#e50914,#f5a623);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#search{flex:1;max-width:500px;display:flex;background:rgba(255,255,255,.1);border-radius:50px;overflow:hidden}
+#search input{flex:1;padding:18px;border:none;background:transparent;color:#fff;font-size:18px;outline:none}
+#search input::placeholder{color:#ccc}
+#search button{padding:18px 30px;background:#e50914;color:#fff;border:none;border-radius:0 50px 50px 0;font-size:18px;cursor:pointer;font-weight:700;transition:background .3s}
+#search button:hover{background:#c40810}
+#grid{padding:120px 30px 100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:25px}
+.tile{background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05));backdrop-filter:blur(20px);border-radius:25px;padding:30px;text-align:center;cursor:pointer;transition:all .4s;border:2px solid transparent;position:relative;overflow:hidden}
+.tile::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transition:.7s}
+.tile:hover::before{left:100%}
+.tile:hover{transform:translateY(-15px) scale(1.02);border-color:#e50914;box-shadow:0 25px 50px rgba(229,9,20,.4)}
+.icon{font-size:48px;margin-bottom:15px;display:block}
+.title{font-size:20px;font-weight:700;margin-bottom:8px}
+.desc{font-size:14px;opacity:.8}
+#browser{position:fixed;top:0;left:0;width:100%;height:100%;border:none;background:#000;z-index:50;display:none}
+#controls{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.95);backdrop-filter:blur(20px);padding:15px 30px;border-radius:50px;display:flex;gap:15px;border:2px solid rgba(255,255,255,.2)}
+.btn{padding:12px 24px;background:linear-gradient(45deg,#e50914,#f5a623);color:#fff;border:none;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer;transition:all .3s;box-shadow:0 5px 15px rgba(229,9,20,.3)}
+.btn:hover{transform:scale(1.05);box-shadow:0 10px 25px rgba(229,9,20,.5)}
+.tile:focus,.btn:focus{outline:3px solid #e50914;outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="header">
+<div id="logo">📺 TV Dionata</div>
+<div id="search">
+<input id="urlInput" placeholder="🔍 YouTube, Globoplay, Google, Netflix..." value="https://www.google.com">
+<button onclick="searchOrGo()">🚀 Ir</button>
+</div>
+</div>
+
+<div id="grid">
+<div class="tile" tabindex="1" onclick="openSite('https://www.youtube.com/tv')">
+<div class="icon">🎥</div>
+<div class="title">YouTube TV</div>
+<div class="desc">4K ilimitado</div>
+</div>
+
+<div class="tile" tabindex="2" onclick="openSite('https://globoplay.globo.com/')">
+<div class="icon">🌎</div>
+<div class="title">Globoplay</div>
+<div class="desc">Novelas HD</div>
+</div>
+
+<div class="tile" tabindex="3" onclick="openSite('https://pluto.tv/pt/live-tv')">
+<div class="icon">📺</div>
+<div class="title">Pluto TV</div>
+<div class="desc">Ao vivo grátis</div>
+</div>
+
+<div class="tile" tabindex="4" onclick="openSite('https://www.plussbt.com/')">
+<div class="icon">📡</div>
+<div class="title">+SBT</div>
+<div class="desc">Canais abertos</div>
+</div>
+
+<div class="tile" tabindex="5" onclick="openSite('https://www.mercadolivre.com.br/')">
+<div class="icon">🛒</div>
+<div class="title">Mercado Livre</div>
+<div class="desc">Compras online</div>
+</div>
+</div>
+
+<iframe id="browser" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"></iframe>
+
+<div id="controls">
+<button class="btn" onclick="goBack()">← Voltar</button>
+<button class="btn" onclick="reload()">🔄 Recarregar</button>
+<button class="btn" onclick="toggleHome()">🏠 Início</button>
+</div>
+
+<script>
+const iframe = document.getElementById('browser');
+const urlInput = document.getElementById('urlInput');
+const grid = document.getElementById('grid');
+let isBrowserActive = false;
+
+function openSite(url) {
+  iframe.src = url;
+  urlInput.value = url;
+  showBrowser();
+}
+
+function searchOrGo() {
+  let query = urlInput.value.trim();
+  if (!query) return;
+  let url = query.match(/^https?:\/\//) ? query : 'https://www.google.com/search?q=' + encodeURIComponent(query);
+  openSite(url);
+}
+
+function showBrowser() {
+  isBrowserActive = true;
+  grid.style.display = 'none';
+  iframe.style.display = 'block';
+  document.body.style.background = '#000';
+}
+
+function goBack() {
+  try {
+    iframe.contentWindow && iframe.contentWindow.history.back();
+  } catch (e) {
+    toggleHome();
+  }
+}
+
+function reload() {
+  iframe.src = iframe.src;
+}
+
+function toggleHome() {
+  isBrowserActive = false;
+  grid.style.display = 'grid';
+  iframe.style.display = 'none';
+  document.body.style.background = '';
+  urlInput.focus();
+}
+
+urlInput.addEventListener('keypress', e => {
+  if (e.key === 'Enter') searchOrGo();
+});
+
+document.addEventListener('keydown', e => {
+  if (!isBrowserActive) {
+    const tiles = document.querySelectorAll('.tile');
+    let current = Array.from(tiles).indexOf(document.activeElement);
+    switch (e.key) {
+      case 'ArrowLeft': current = (current - 1 + tiles.length) % tiles.length; break;
+      case 'ArrowRight': current = (current + 1) % tiles.length; break;
+      case 'ArrowUp': current = Math.max(0, current - 2); break;
+      case 'ArrowDown': current = Math.min(tiles.length - 1, current + 2); break;
+      case 'Enter': tiles[current].click(); break;
+    }
+    tiles[current].focus();
+  } else {
+    if (e.key === 'Escape' || e.key === 'Backspace') toggleHome();
+    if (e.key === 'F5') reload();
+  }
+});
+
+iframe.onload = () => {
+  try {
+    urlInput.value = iframe.contentDocument.location.href || iframe.src;
+  } catch (e) {}
+};
+
+document.documentElement.requestFullscreen();
+</script>
+</body>
+</html>
