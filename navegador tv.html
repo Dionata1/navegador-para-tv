@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📺 TV SIMPLES</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        h1 {
+            font-size: 4em;
+            text-align: center;
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            width: 80%;
+            max-width: 600px;
+            padding: 25px;
+            font-size: 1.8em;
+            border: 4px solid #00ff88;
+            border-radius: 50px;
+            background: white;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #ff4444;
+            box-shadow: 0 0 30px #ff4444;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            border: 3px solid #00ff88;
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .card:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+            border-color: #ff4444;
+        }
+        .card-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            font-size: 2em;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 1.3em;
+        }
+        .btn-abrir {
+            background: #00ff88;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0,255,136,0.4);
+        }
+        .btn-abrir:hover {
+            background: #00cc6a;
+            transform: scale(1.1);
+        }
+        .status {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            padding: 20px 40px;
+            border-radius: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border: 2px solid #00ff88;
+        }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📺 TV GRÁTIS</h1>
+        
+        <input type="text" class="search-box" id="busca" placeholder="DIGITE AQUI e aperte ENTER" autofocus>
+        
+        <div class="grid">
+            <div class="card" onclick="abrir('https://pluto.tv/pt/live-tv', 'Pluto TV')">
+                <div class="card-icon">📺</div>
+                <h3>Pluto TV</h3>
+                <p>TV ao vivo grátis</p>
+                <button class="btn-abrir" onclick="event.stopPropagation(); abrir('https://pluto.tv/pt/live-tv', 'Pluto TV')">ABRIR</button>
+            </div>
+            
+            <div class="card" onclick="abrir('https://www.youtube.com', 'YouTube')">
+                <div class="card-icon">🎥</div>
+                <h3>YouTube</h3>
+                <p>Vídeos grátis</p>
+                <button class="btn-abrir" onclick="event.stopPropagation(); abrir('https://www.youtube.com', 'YouTube')">ABRIR</button>
+            </div>
+            
+            <div class="card" onclick="abrir('https://play.mercadolivre.com.br/', 'Mercado Play')">
+                <div class="card-icon">🛒</div>
+                <h3>Mercado Play</h3>
+                <p>Filmes grátis</p>
+                <button class="btn-abrir" onclick="event.stopPropagation(); abrir('https://play.mercadolivre.com.br/', 'Mercado Play')">ABRIR</button>
+            </div>
+            
+            <div class="card" onclick="abrir('https://www.sbt.com.br/aovivo', 'SBT ao Vivo')">
+                <div class="card-icon">📡</div>
+                <h3>+SBT</h3>
+                <p>SBT ao vivo</p>
+                <button class="btn-abrir" onclick="event.stopPropagation(); abrir('https://www.sbt.com.br/aovivo', 'SBT ao Vivo')">ABRIR</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="status" id="status">🔍 DIGITE e ENTER | 🖱️ CLIQUE nos cards</div>
+
+    <script>
+        // FUNÇÃO ABRIR SIMPLES
+        function abrir(url, nome) {
+            window.open(url, '_blank');
+            document.getElementById('status').innerHTML = '✅ ABRINDO: ' + nome;
+        }
+
+        // BUSCA GOOGLE ULTRA SIMPLES
+        document.getElementById('busca').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                var termo = this.value.trim();
+                if (termo !== '') {
+                    window.open('https://www.google.com/search?q=' + encodeURIComponent(termo), '_blank');
+                    document.getElementById('status').innerHTML = '🔍 BUSCANDO: ' + termo;
+                    this.value = '';
+                }
+            }
+        });
+
+        // FOCO NA BUSCA
+        document.getElementById('busca').focus();
+    </script>
+</body>
+</html>
